@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'upload/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
+    <script src="{% static 'upload/lib/jquery-3.4.1.js' %}"></script>
+    <script src="{% static 'upload/bootstrap/js/bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'upload/lib/menu.css' %}">
+    <title>Mirror</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="/"><i class="fas fa-tshirt"></i> Mirror</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!--            <li class="nav-item active">-->
+                <!--                <a class="nav-link" href="/">Pizza <span class="sr-only">(current)</span></a>-->
+                <!--            </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload"><i class="fas fa-cloud-upload-alt"></i> 下訂單</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/lookup"><i class="fas fa-search"></i> 查詢訂單</a>
+                </li>
+                <!--            <li class="nav-item">-->
+                <a class="nav-link" href="#"><i class="fas fa-edit"></i> 修改訂單</a>
+                <!--            </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-address-card"></i> 關於我們</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="mailto:s19920513@email.com"><i class="fas fa-phone-square-alt"></i>
+                        連絡我們</a>
+                </li>
+            </ul>
+
+
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm py-3 px-1">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card border-success mr-3" style="max-width: 300px;">
+                        <div class="card-header bg-transparent border-success">全身照</div>
+                        <div class="card-body text-success">
+                            <h5 class="card-title"></h5>
+                            <img src='#' id='upload_img' height="300" width="250">
+                        </div>
+                        <div class="card-footer bg-transparent border-success ">
+                            <!-- <label for="upload_file" class="btn">上傳全身照</label> -->
+                            <!-- <input type='file' id='upload_file' accept="image/*" /> -->
+                            <label class="btn custom-input-btn">
+                                <input type="file" id='upload_file' accept="image/*" style="display:none" />
+                                <i class="fas fa-cloud-upload-alt"></i> Upload Files
+                            </label>
+                            <button type='submit' class="btn btn-secondary btn-outline-light text-right">解析</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm">
+                One of three columns
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        //https://pjchender.blogspot.com/2019/01/js-javascript-input-file-upload-file.html
+        $(document).ready(function () {
+            $('#upload_img').hide();
+        });
+        $(function () {
+            $(":file").change(function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = imageIsLoaded;
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+
+        function imageIsLoaded(e) {
+            $('#upload_img').show()
+            $('#upload_img').attr('src', e.target.result);
+        };
+    </script>
+</body>

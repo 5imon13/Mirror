@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
+    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'upload/js/jquery.min.js' %}"></script>
+    <script src="{% static 'upload/js/popper.min.js' %}"></script>
+    <title>Mirror</title>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+
+        .toggle.ios,
+        .toggle-on.ios,
+        .toggle-off.ios {
+            border-radius: 15px;
+        }
+
+        .toggle.ios .toggle-handle {
+            border-radius: 50%;
+        }
+
+        .card {
+            background-color: rgba(70, 70, 77, 0.4);
+            color: #fff;
+            font-weight: bolder;
+            border-radius: 15px;
+        }
+
+        .border-3 {
+            border-width: 3px !important;
+            border-style: dashed !important;
+        }
+
+        label {
+            cursor: pointer;
+        }
+    </style>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-6 offset-3 card border-0 shadow">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row mx-1 align-items-end justify-content-between">
+                            <div class="col-4">
+                            </div>
+                            <div class="col-2 ">
+                                <input type="checkbox" data-toggle="toggle" data-on="上傳照片" data-off="使用鏡頭"
+                                    data-style="ios" data-size="small" id="upload_mode" data-offstyle="danger">
+                            </div>
+                        </div>
+                        <div style="height: 380px"
+                            class="row border border-3 my-3 text-center justify-content-center align-items-center">
+                            <label for="uImage" class="btn btn-primary" id='uploadIcon'><i
+                                    class="fas fa-cloud-upload-alt fa-3x"></i></label>
+                            <input type="file" id="uImage" name="imageUpload" accept="image/*" style="display: none"
+                                class="btn btn-dark btn-lg" onchange="showImg(this)"></input>
+                            <img id="showimg" src="" style="display:none; height:350px; width:300px" />
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-dark btn-lg btn-block">分析風格</button>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showImg(thisimg) {
+            var file = thisimg.files[0];
+            if (window.FileReader) {
+                var fr = new FileReader();
+
+                var showimg = document.getElementById('showimg');
+                fr.onloadend = function (e) {
+                    showimg.src = e.target.result;
+                };
+                fr.readAsDataURL(file);
+                showimg.style.display = 'block';
+                var icon = document.getElementById('uploadIcon')
+                icon.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

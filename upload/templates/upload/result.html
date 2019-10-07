@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
+    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'upload/js/jquery.min.js' %}"></script>
+    <script src="{% static 'upload/js/popper.min.js' %}"></script>
+    <title>Mirror</title>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+
+        .toggle.ios,
+        .toggle-on.ios,
+        .toggle-off.ios {
+            border-radius: 15px;
+        }
+
+        .toggle.ios .toggle-handle {
+            border-radius: 50%;
+        }
+
+        .card {
+            background-color: rgba(70, 70, 77, 0.4);
+            color: #fff;
+            border-radius: 15px;
+        }
+
+        .border-3 {
+            border-width: 3px !important;
+            border-style: dashed !important;
+        }
+
+        img {
+            height: 380px;
+            width: auto;
+            max-width: 100%;
+
+        }
+    </style>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-6 offset-3 card border-0 shadow">
+                <div class="card-body">
+                    <div class="row mx-1 text-center">
+                        <div class="col">
+                            <h2>風格分析結果</h2>
+                        </div>
+                    </div>
+                    <div style="height: 380px" class="row my-3 text-center justify-content-center align-items-center">
+                        <div class="col-6">
+                            <img src="{{path}}" alt="">
+                        </div>
+                        <div class="col-6">
+                            <div class="card" style="height: 200px">
+                                <div class="card-body">
+                                    <h5 class="card-title">您的穿搭風格為:</h5>
+                                    <p class="card-text">
+                                        單寧: 100%<br>
+                                        上衣: 單寧外套<br>
+                                        下著: 牛仔褲<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle btn-lg btn-block" type="button"
+                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    推薦風格
+                                </button>
+                                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                                    <button class="dropdown-item" type="button">商務風</button>
+                                    <button class="dropdown-item" type="button">運動風</button>
+                                    <button class="dropdown-item" type="button">單寧風</button>
+                                    <button class="dropdown-item" type="button">洋裝</button>
+                                    <button class="dropdown-item" type="button">其他</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-dark btn-lg btn-block">推薦穿搭</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+      
+    </script>
+</body>
+
+</html>
