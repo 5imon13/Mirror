@@ -13,16 +13,17 @@ from keras.models import load_model
 from keras.layers import Input
 from PIL import Image, ImageFont, ImageDraw
 
-from yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
-from yolo3.utils import letterbox_image
+from upload.yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
+from upload.yolo3.utils import letterbox_image
 import os
 from keras.utils import multi_gpu_model
+from keras.backend import clear_session
 
 class YOLO(object):
     _defaults = {
-        "model_path": 'model_data/temp.h5',
-        "anchors_path": 'model_data/yolo_anchors.txt',
-        "classes_path": 'model_data/voc_classes.txt',
+        "model_path": 'upload/model_data/temp.h5',
+        "anchors_path": 'upload/model_data/yolo_anchors.txt',
+        "classes_path": 'upload/model_data/voc_classes.txt',
         "score" : 0.3,
         "iou" : 0.45,
         "model_image_size" : (416, 416),
@@ -128,14 +129,22 @@ class YOLO(object):
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
-        font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
+        font = ImageFont.truetype(font='upload/static/upload/font/FiraMono-Medium.otf',
                     size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
         thickness = (image.size[0] + image.size[1]) // 300
-
+        result = []
+        
+        print(out_scores)
+        print(out_classes)
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
             box = out_boxes[i]
             score = out_scores[i]
+            item = {}
+            item['class'] = predicted_class
+            item['box'] = box
+            item['score'] = score
+            result.append(item)
 
             label = '{} {:.2f}'.format(predicted_class, score)
             draw = ImageDraw.Draw(image)
@@ -166,11 +175,13 @@ class YOLO(object):
 
         end = timer()
         print(end - start)
-        return image
+        print(result)
+        return image, result
 
     def close_session(self):
         self.sess.close()
-
+    def clear_session(self):
+        clear_session()
 def detect_video(yolo, video_path, output_path=""):
     import cv2
     vid = cv2.VideoCapture(video_path)

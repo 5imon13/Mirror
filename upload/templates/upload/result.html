@@ -8,9 +8,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
-    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
     <title>Mirror</title>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
@@ -74,8 +74,8 @@
                                     <h5 class="card-title">您的穿搭風格為:</h5>
                                     <p class="card-text">
                                         單寧: 100%<br>
-                                        上衣: 單寧外套<br>
-                                        下著: 牛仔褲<br>
+                                        上衣: {{top.class}}<br>
+                                        下著: {{bot.class}}<br>
                                     </p>
                                 </div>
                             </div>
@@ -99,7 +99,9 @@
                             </div>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-dark btn-lg btn-block">推薦穿搭</button>
+                            <form action="" method="post">
+                                <button type="submit" class="btn btn-dark btn-lg btn-block">推薦穿搭</button>
+                            </form>
                         </div>
 
 
@@ -110,7 +112,7 @@
         </div>
     </div>
     <script>
-      
+
     </script>
 </body>
 
