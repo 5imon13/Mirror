@@ -63,8 +63,9 @@
                             <div class="col-4">
                             </div>
                             <div class="col-2 ">
-                                <input type="checkbox" data-toggle="toggle" data-on="上傳照片" data-off="使用鏡頭"
-                                    data-style="ios" data-size="small" id="upload_mode" data-offstyle="danger">
+                                <input type="checkbox" data-toggle="toggle" data-on="使用鏡頭" data-off="上傳照片"
+                                    data-style="ios" data-size="small" id="upload_mode" data-onstyle="danger"
+                                    data-offstyle="primary">
                             </div>
                         </div>
                         <div style="height: 380px"
@@ -101,6 +102,13 @@
                 icon.style.display = 'none';
             }
         }
+        $(function () {
+            $('#upload_mode').change(function () {
+                $.post('/upload/', true, function (path) {
+                    alert(path['path']);
+                }, 'json');
+            })
+        })
     </script>
 </body>
 

@@ -6,12 +6,38 @@ import os
 from upload.yolo import YOLO
 from PIL import Image
 import argparse
+import cv2
+import json
+from django.views.decorators.csrf import csrf_exempt
+import time
 
 
 
-
+@csrf_exempt
 def index(request):
-    if request.method == "GET":
+    if request.is_ajax():
+        result = {}
+        
+        cap = cv2.VideoCapture(0)
+        time.sleep(2)
+        while(True):
+            # 從攝影機擷取一張影像
+            ret, frame = cap.read()
+
+            # 顯示圖片
+            #cv2.imshow('frame', frame)
+            path = os.path.join(settings.MEDIA_URL, 'uuu.jpg').replace('\\','/')
+            cv2.imwrite(path[1:], frame)
+            # 若按下 q 鍵則離開迴圈
+            break
+        cap.release()
+        result["path"] = path
+        # 關閉所有 OpenCV 視窗
+
+        cv2.destroyAllWindows()
+        return HttpResponse(json.dumps(result))
+
+    elif request.method == "GET":
         template = loader.get_template('upload/upload.html')
         context = {}
         return HttpResponse(template.render(context, request))
