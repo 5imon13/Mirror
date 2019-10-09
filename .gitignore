@@ -1,1 +1,2 @@
 *.h5
+/clothes_cut/yolo/__pycache__
