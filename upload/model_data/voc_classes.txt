@@ -1,13 +1,13 @@
-short sleeve top
-long sleeve top
-short sleeve outwear
-long sleeve outwear
-vest
-sling
-shorts
-trousers
-skirt
-short sleeve dress
-long sleeve dress
-vest dress
-sling dress
+短袖上衣
+長袖上衣
+短袖外套
+長袖外套
+背心
+細肩帶背心
+短褲
+長褲
+裙子
+短袖洋裝
+長袖洋裝
+背心洋裝
+細肩帶的洋裝

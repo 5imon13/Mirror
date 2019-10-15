@@ -75,6 +75,7 @@
                             <input type="file" id="uImage" name="imageUpload" accept="image/*" style="display: none"
                                 class="btn btn-dark btn-lg" onchange="showImg(this)"></input>
                             <img id="showimg" src="" style="display:none; height:350px; width:300px" />
+                            <img id="camimg" src="{% url 'livefeed' %}" style="display:none; height:350px; width:300px" />
                         </div>
                         <div class="row">
                             <button type="submit" class="btn btn-dark btn-lg btn-block">分析風格</button>
@@ -104,9 +105,24 @@
         }
         $(function () {
             $('#upload_mode').change(function () {
-                $.post('/upload/', true, function (path) {
-                    alert(path['path']);
-                }, 'json');
+                if($('#upload_mode').prop("checked", false)) {
+                    // var icon = document.getElementById('uploadIcon')
+                    // icon.style.display = 'none';
+                    // $('#camimg').show()
+                    // $.post('/upload/', true, function (path) {
+                    //     alert(path['path']);
+                    //     $('#camimg').attr('src', "path['path']"); 
+                    // }, 'json');
+                    $('#camimg').show();
+                    var icon = document.getElementById('uploadIcon')
+                    icon.style.display = 'none';
+                }
+                else if ($('#upload_mode').prop("checked", true)){   
+                    $('#camimg').hide();
+                    var icon = document.getElementById('uploadIcon')
+                    icon.style.display = 'block';
+                }
+
             })
         })
     </script>
