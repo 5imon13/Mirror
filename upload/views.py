@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 import time
 from django.views.decorators import gzip
 from django.http import HttpResponseServerError
+import numpy as np
+import base64
 
 
 @csrf_exempt
@@ -78,6 +80,7 @@ class VideoCamera(object):
 
     def get_frame(self):
         ret, image = self.video.read()
+        # rotated_image = np.rot90(image)
         ret, jpeg = cv2.imencode(".jpg", image)
         return jpeg.tobytes()
 
@@ -98,5 +101,18 @@ def livefeed(request):
         print("aborted")
 
 
-def analysis(request):
-    return None
+@csrf_exempt
+def login(request):
+    if request.method == "GET":
+        template = loader.get_template("upload/login.html")
+        context = {}
+        return HttpResponse(template.render(context, request))
+    elif request.method == "POST":
+        img = request.POST['canvasData'].split(',')[1]
+        imgdata = base64.b64decode(img)
+        path = os.path.join(settings.MEDIA_URL, "head.jpg").replace("\\", "/")
+        with open(path[1:], 'wb') as f:
+            f.write(imgdata)
+        # return render(request,"upload/upload.html")
+        return HttpResponse("hello")
+

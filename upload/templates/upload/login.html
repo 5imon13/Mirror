@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
+    <script src="{% static 'upload/js/jquery.min.js' %}"></script>
+    <script src="{% static 'upload/js/popper.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <title>Mirror</title>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+
+        .card {
+            background-color: rgba(70, 70, 77, 0.4);
+            color: #fff;
+            border-radius: 15px;
+        }
+
+        .border-3 {
+            border-width: 3px !important;
+            border-style: dashed !important;
+            z-index: 2 !important;
+            position: relative;
+            display: inline-block;
+        }
+
+        video {
+            position: relative;
+            /* z-index: 1 !important; */
+        }
+
+        /* img {
+            height: 380px;
+            width: auto;
+            max-width: 100%;
+
+        } */
+    </style>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-6 offset-3 card border-0 shadow">
+                <div class="card-body">
+                    <div class="row mx-1 text-center">
+                        <div class="col">
+                            <h2>臉部辨識登入</h2>
+                        </div>
+                    </div>
+                    <div style="height: 380px" class="row my-3 text-center justify-content-center align-items-center">
+                        <video id="player" autoplay height="320" width="400"></video>
+                        <canvas id="snapshot" width="320" height="240" style="display:none"></canvas>
+                    </div>
+
+                    <form action="" method="POST" id="headshot" enctype="multipart/form-data">
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                        <button type="button" id="capture" class="btn btn-dark btn-lg btn-block">登入</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var player = document.getElementById('player');
+        var snapshotCanvas = document.getElementById('snapshot');
+        var captureButton = document.getElementById('capture');
+
+        var handleSuccess = function (stream) {
+            // Attach the video stream to the video element and autoplay.
+            player.srcObject = stream;
+        };
+
+        captureButton.addEventListener('click', function () {
+            var context = snapshot.getContext('2d');
+            // Draw the video frame to the canvas.
+            context.drawImage(player, 0, 0, snapshotCanvas.width,
+                snapshotCanvas.height);
+            save();
+        });
+
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(handleSuccess);
+
+        function save() {
+            var canvas = document.getElementById('snapshot');
+            document.getElementById('my_hidden').value = canvas.toDataURL('image/png');
+            document.forms["headshot"].submit();
+        }
+        $(function () {
+            $('#overlay').css({
+                top: $('#player').height() / 2 - $('#player').height() / 2,
+                left: $('#player').width() / 2 - $('#player').width() / 2
+            });
+        });
+    </script>
+</body>
+
+</html>
