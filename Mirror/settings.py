@@ -25,8 +25,7 @@ SECRET_KEY = 'bbrb7)ctmics=_ht%m^lks11#ne^a88rf=$y%oxwgj57&nmxp!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,7 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'upload.apps.UploadConfig'
+    'upload.apps.UploadConfig',
+    'werkzeug_debugger_runserver',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

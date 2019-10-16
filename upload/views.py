@@ -14,36 +14,29 @@ from django.views.decorators import gzip
 from django.http import HttpResponseServerError
 import numpy as np
 import base64
+import face_recognition
+import upload.facerec_from_webcam_faster as face
+from django.shortcuts import redirect
 
 
 @csrf_exempt
 def index(request):
     if request.is_ajax():
-        result = {}
-
-        cap = cv2.VideoCapture(0)
-        time.sleep(2)
-        while True:
-            # 從攝影機擷取一張影像
-            ret, frame = cap.read()
-            # 顯示圖片
-            # cv2.imshow('frame', frame)
-            path = os.path.join(settings.MEDIA_URL, "uuu.jpg").replace("\\", "/")
-            cv2.imwrite(path[1:], frame)
-            # 若按下 q 鍵則離開迴圈
-            break
-        cap.release()
-        result["path"] = path
-        # 關閉所有 OpenCV 視窗
-
-        cv2.destroyAllWindows()
-        print(path)
-        return HttpResponse(json.dumps(result))
+        request.session.flush()
+        msg = 'Successfully log out!'
+        return HttpResponse(json.dumps(msg))
 
     elif request.method == "GET":
         template = loader.get_template("upload/upload.html")
         context = {}
-        return HttpResponse(template.render(context, request))
+        if 'uid' not in request.session:
+            return HttpResponse(template.render(context, request))
+        else:
+            status = 'login'
+            user = request.session['uid']
+            return render(request,"upload/upload.html",locals())
+
+        
     elif request.method == "POST":
         f = request.FILES["imageUpload"]
         with open(os.path.join(settings.MEDIA_ROOT, "test.jpg"), "wb+") as destination:
@@ -52,6 +45,8 @@ def index(request):
             path = os.path.join(settings.MEDIA_URL, "test.jpg").replace("\\", "/")
         print(f"path: {path}")
         image = Image.open("." + path)
+        if image.mode == "P":
+            image = image.convert('RGB')
         print("呼叫YOLO，開始辨識")
         yolo = YOLO()
         r_image, result = yolo.detect_image(image)
@@ -113,6 +108,12 @@ def login(request):
         path = os.path.join(settings.MEDIA_URL, "head.jpg").replace("\\", "/")
         with open(path[1:], 'wb') as f:
             f.write(imgdata)
-        # return render(request,"upload/upload.html")
-        return HttpResponse("hello")
+        #print(path)
+        name = face.detec()
+        request.session['uid'] = name
+        # status = 'login'
+        # user = name
+        return redirect("/upload/")
+        # render(request,"upload/upload.html",locals())
+        # return HttpResponse(f"<h1>Hello {request.session['uid']}!</h1>")
 

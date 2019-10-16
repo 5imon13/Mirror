@@ -8,9 +8,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
-    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
     <title>Mirror</title>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
@@ -36,16 +36,19 @@
         .toggle.ios .toggle-handle {
             border-radius: 50%;
         }
+
         .card {
             background-color: rgba(70, 70, 77, 0.4);
             color: #fff;
             font-weight: bolder;
             border-radius: 15px;
         }
+
         .border-3 {
             border-width: 3px !important;
             border-style: dashed !important;
         }
+
         label {
             cursor: pointer;
         }
@@ -56,13 +59,14 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="row mx-1 align-items-end justify-content-between">
-                            <div class="col-4">
+                        <div class="row mx-1  justify-content-between">
+                            <div class="col-4 align-self-start">
+
                             </div>
-                            <div class="col-2 ">
-                                <input type="checkbox" data-toggle="toggle" data-on="使用鏡頭" data-off="上傳照片"
-                                    data-style="ios" data-size="small" id="upload_mode" data-onstyle="danger"
-                                    data-offstyle="primary">
+                            <div class="col-2 align-self-end">
+                                <input type="checkbox" data-toggle="toggle" data-on="上傳照片" data-off="使用鏡頭"
+                                    data-style="ios" data-size="small" id="upload_mode" data-onstyle="primary"
+                                    data-offstyle="danger" checked>
                             </div>
                         </div>
                         <div style="height: 380px"
@@ -72,13 +76,22 @@
                             <input type="file" id="uImage" name="imageUpload" accept="image/*" style="display: none"
                                 class="btn btn-dark btn-lg" onchange="showImg(this)"></input>
                             <img id="showimg" src="" style="display:none; height:350px; width:300px" />
-                            <img id="camimg" src="{% url 'livefeed' %}" style="display:none; height:350px; width:300px" />
+                            <img id="camimg" src="{% url 'livefeed' %}"
+                                style="display:none; height:350px; width:300px" />
                         </div>
                         <div class="row">
                             <button type="submit" class="btn btn-dark btn-lg btn-block">分析風格</button>
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="col-3">
+                {% if status != "login" %}
+                <a href="/upload/login/" class="btn btn-primary" role="button" aria-disabled="true">登入</a>
+                {% else %}
+                <p>Hello, {{ user }}</p>
+                <button type="button" class="btn btn-primary" id="logout">登出</button>
+                {% endif%}
             </div>
         </div>
     </div>
@@ -100,26 +113,39 @@
         }
         $(function () {
             $('#upload_mode').change(function () {
-                if($('#upload_mode').prop("checked", false)) {
-                    // var icon = document.getElementById('uploadIcon')
-                    // icon.style.display = 'none';
-                    // $('#camimg').show()
-                    // $.post('/upload/', true, function (path) {
-                    //     alert(path['path']);
-                    //     $('#camimg').attr('src', "path['path']"); 
-                    // }, 'json');
+                if ($("#upload_mode").is(':checked')) {
+                    $('#uploadIcon').show()
+                    $('#camimg').hide()
+                } else {
                     $('#camimg').show();
-                    var icon = document.getElementById('uploadIcon')
-                    icon.style.display = 'none';
+                    $('#uploadIcon').hide()
                 }
-                else if ($('#upload_mode').prop("checked", true)){   
-                    $('#camimg').hide();
-                    var icon = document.getElementById('uploadIcon')
-                    icon.style.display = 'block';
-                }
+                // if ($('#upload_mode').prop("checked", false)) {
+                // var icon = document.getElementById('uploadIcon')
+                // icon.style.display = 'none';
+                // $('#camimg').show()
+                // $.post('/upload/', true, function (path) {
+                //     alert(path['path']);
+                //     $('#camimg').attr('src', "path['path']"); 
+                // }, 'json');
+                // $('#camimg').show();
+                //     var icon = document.getElementById('uploadIcon');
+                //     icon.style.display = 'none';
 
-            })
-        })
+                // } else if ($('#upload_mode').prop("checked", true)) {
+                //     $('#camimg').hide();
+                //     var icon = document.getElementById('uploadIcon');
+                //     icon.style.display = 'block';
+                // }
+
+            });
+            $('#logout').click(function () {
+                $.post('/upload/', true, function (msg) {
+                    alert(msg)
+                    location.reload();
+                }, 'json');
+            });
+        });
     </script>
 </body>
 

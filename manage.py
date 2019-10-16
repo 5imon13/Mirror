@@ -2,6 +2,7 @@
 import os
 import sys
 
+#runserver: python manage.py runserver_plus --cert server.crt 0.0.0.0:80
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Mirror.settings')
     try:

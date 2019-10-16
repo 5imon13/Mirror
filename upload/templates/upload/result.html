@@ -109,6 +109,14 @@
 
                 </div>
             </div>
+            <div class="col-3">
+                {% if status != "login" %}
+                <a href="/upload/login/" class="btn btn-primary" role="button" aria-disabled="true">登入</a>
+                {% else %}
+                <p>Hello, {{ user }}</p>
+                <button type="button" class="btn btn-primary" id="logout">登出</button>
+                {% endif%}  
+            </div>
         </div>
     </div>
     <script>
