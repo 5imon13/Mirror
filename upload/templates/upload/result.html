@@ -57,23 +57,24 @@
     </style>
     <div class="container my-4">
         <div class="row">
-            <div class="col-6 offset-3 card border-0 shadow">
+            <div class="col-10 col-md-6 offset-1 offset-md-3 card border-0 shadow">
                 <div class="card-body">
                     <div class="row mx-1 text-center">
                         <div class="col">
                             <h2>風格分析結果</h2>
                         </div>
                     </div>
-                    <div style="height: 380px" class="row my-3 text-center justify-content-center align-items-center">
-                        <div class="col-6">
+                    <div style="height: 500px" class="row my-3 text-center justify-content-center align-items-center">
+                        <div class="col-8">
                             <img src="{{path}}" alt="">
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="card" style="height: 200px">
                                 <div class="card-body">
-                                    <h5 class="card-title">您的穿搭風格為:</h5>
-                                    <p class="card-text">
-                                        單寧: 100%<br>
+                                    <h6 class="card-title">穿搭風格為:</h6>
+                                    <p class="card-text text-left">
+                                        <span id="type">單寧</span>: <span id="percent">87</span>%<br>
+                                        <br>
                                         上衣: {{top.class}}<br>
                                         下著: {{bot.class}}<br>
                                     </p>
@@ -103,10 +104,7 @@
                                 <button type="submit" class="btn btn-dark btn-lg btn-block">推薦穿搭</button>
                             </form>
                         </div>
-
-
                     </div>
-
                 </div>
             </div>
             <div class="col-3">

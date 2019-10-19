@@ -62,9 +62,9 @@
                             <h2>臉部辨識登入</h2>
                         </div>
                     </div>
-                    <div style="height: 380px" class="row my-3 text-center justify-content-center align-items-center">
+                    <div style="height: 500px" class="row my-3 text-center justify-content-center align-items-center">
                         <video id="player" autoplay height="320" width="400"></video>
-                        <canvas id="snapshot" width="320" height="240" style="display:none"></canvas>
+                        <canvas id="snapshot" height="320" width="400" style="display:none"></canvas>
                     </div>
 
                     <form action="" method="POST" id="headshot" enctype="multipart/form-data">
@@ -101,6 +101,9 @@
         function save() {
             var canvas = document.getElementById('snapshot');
             document.getElementById('my_hidden').value = canvas.toDataURL('image/png');
+            player.style.display = 'none';
+            canvas.style.display = 'block';
+            captureButton.disabled = 'true';
             document.forms["headshot"].submit();
         }
         $(function () {

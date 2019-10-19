@@ -18,7 +18,7 @@ import face_recognition
 import upload.facerec_from_webcam_faster as face
 from django.shortcuts import redirect
 
-
+global count
 @csrf_exempt
 def index(request):
     if request.is_ajax():
@@ -49,6 +49,7 @@ def index(request):
             image = image.convert('RGB')
         print("呼叫YOLO，開始辨識")
         yolo = YOLO()
+        yolo.clear_session() 
         r_image, result = yolo.detect_image(image)
         print("辨識完成，輸出檔案")
         yolo.clear_session()
@@ -73,16 +74,22 @@ class VideoCamera(object):
     def __del__(self):
         self.video.release()
 
-    def get_frame(self):
+    def get_frame(self, count):
         ret, image = self.video.read()
         # rotated_image = np.rot90(image)
         ret, jpeg = cv2.imencode(".jpg", image)
+
+        # path = os.path.join(settings.MEDIA_URL, f"tmp{count}.jpg").replace("\\", "/")
+        # if count%3==0:
+        #     cv2.imwrite(path[1:], rotated_image)
         return jpeg.tobytes()
 
 
 def gen(camera):
+    count = 0
     while True:
-        frame = camera.get_frame()
+        frame = camera.get_frame(count)
+        count+=1
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n\r\n")
 
 
