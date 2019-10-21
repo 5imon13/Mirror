@@ -17,12 +17,14 @@ import base64
 import face_recognition
 import upload.facerec_from_webcam_faster as face
 from django.shortcuts import redirect
+from upload.models import Product
+from django.db import models
 
 global count
 @csrf_exempt
 def index(request):
     if request.is_ajax():
-        request.session.flush()
+        del request.session['uid']
         msg = 'Successfully log out!'
         return HttpResponse(json.dumps(msg))
 
@@ -37,7 +39,58 @@ def index(request):
             return render(request,"upload/upload.html",locals())
 
         
+    # elif request.method == "POST":
+    #     f = request.FILES["imageUpload"]
+    #     with open(os.path.join(settings.MEDIA_ROOT, "test.jpg"), "wb+") as destination:
+    #         for chunk in f.chunks():
+    #             destination.write(chunk)
+    #         path = os.path.join(settings.MEDIA_URL, "test.jpg").replace("\\", "/")
+    #     print(f"path: {path}")
+    #     image = Image.open("." + path)
+    #     if image.mode == "P":
+    #         image = image.convert('RGB')
+    #     print("呼叫YOLO，開始辨識")
+    #     yolo = YOLO()
+    #     yolo.clear_session() 
+    #     r_image, result = yolo.detect_image(image)
+    #     print("辨識完成，輸出檔案")
+    #     yolo.clear_session()
+    #     # r_image.show()
+    #     path = path.replace("test.jpg", "out.jpg")
+    #     r_image.save(path[1:])
+    #     print(result)
+    #     if len(result) != 1:
+    #         top = result[1]
+    #         bot = result[0]
+    #     else:
+    #         top, bot = result[0], result[0]
+    #     return render(
+    #         request, "upload/result.html", locals()
+    #     )
+# {"path": path, "top": top, "bot": bot}
+@csrf_exempt
+def result(request):
+    bot = 'test'
+    top = 'test'
+    if request.is_ajax():
+        del request.session['uid']
+        msg = 'Successfully log out!'
+        return HttpResponse(json.dumps(msg))
+
+    elif request.method == "GET":
+        template = loader.get_template("upload/result.html")
+        context = {}
+        if 'uid' not in request.session:
+            return render(request,"upload/result.html",locals())
+        else:
+            status = 'login'
+            user = request.session['uid']
+            return render(request,"upload/result.html",locals())
+        
     elif request.method == "POST":
+        # return render(request,"upload/recommend.html")
+        request.session['option'] = 'denim'
+        # return redirect("/upload/recommend/")
         f = request.FILES["imageUpload"]
         with open(os.path.join(settings.MEDIA_ROOT, "test.jpg"), "wb+") as destination:
             for chunk in f.chunks():
@@ -63,9 +116,8 @@ def index(request):
         else:
             top, bot = result[0], result[0]
         return render(
-            request, "upload/result.html", {"path": path, "top": top, "bot": bot}
+            request, "upload/result.html", locals()
         )
-
 
 class VideoCamera(object):
     def __init__(self):
@@ -123,4 +175,41 @@ def login(request):
         return redirect("/upload/")
         # render(request,"upload/upload.html",locals())
         # return HttpResponse(f"<h1>Hello {request.session['uid']}!</h1>")
+
+def recommend(request):
+
+    if request.is_ajax():
+        del request.session['uid']
+        msg = 'Successfully log out!'
+        return HttpResponse(json.dumps(msg))
+    elif request.method == "POST":
+        # for obj in Product.objects.all():
+        #     print(obj.img)
+        # template = loader.get_template("upload/recommend.html")
+        # context={}
+        option = request.session['option']
+        print(option)
+        style = Product.objects.filter(style=option)
+        path = []
+        for item in style:
+            path.append(item.img)
+        if 'uid' not in request.session:
+            return render(request, "upload/recommend.html", locals())
+        else:
+            status = 'login'
+            user = request.session['uid']
+            return render(request,"upload/recommend.html",locals())
+    elif request.method == "GET":
+        option = request.session['option']
+        print(option)
+        style = Product.objects.filter(style=option)
+        path = []
+        for item in style:
+            path.append(item.img)
+        if 'uid' not in request.session:
+            return render(request, "upload/recommend.html", locals())
+        else:
+            status = 'login'
+            user = request.session['uid']
+            return render(request,"upload/recommend.html",locals())
 
