@@ -2,23 +2,26 @@ from django.shortcuts import render
 from django.http import HttpResponse, StreamingHttpResponse
 from django.template import loader
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators import gzip
+from django.http import HttpResponseServerError
+from django.shortcuts import redirect
+from django.db import models
+
 import os
-from upload.yolo import YOLO
-from PIL import Image
 import argparse
 import cv2
 import json
-from django.views.decorators.csrf import csrf_exempt
 import time
-from django.views.decorators import gzip
-from django.http import HttpResponseServerError
+from PIL import Image
 import numpy as np
 import base64
-import face_recognition
-import upload.facerec_from_webcam_faster as face
-from django.shortcuts import redirect
+
 from upload.models import Product
-from django.db import models
+import upload.facerec_from_webcam_faster as face
+import upload.label_image as style_model
+from upload.yolo import YOLO
+import face_recognition
 
 global count
 @csrf_exempt
@@ -37,19 +40,20 @@ def index(request):
             status = 'login'
             user = request.session['uid']
             return render(request,"upload/upload.html",locals())
+    # elif request.method == "POST":
 
 @csrf_exempt
 def result(request):
-    bot = 'test'
-    top = 'test'
+    # bot = 'test'
+    # top = 'test'
+    request.session['option'] = 'denim'
+
     if request.is_ajax():
         del request.session['uid']
         msg = 'Successfully log out!'
         return HttpResponse(json.dumps(msg))
 
     elif request.method == "GET":
-        template = loader.get_template("upload/result.html")
-        context = {}
         if 'uid' not in request.session:
             return render(request,"upload/result.html",locals())
         else:
@@ -65,6 +69,7 @@ def result(request):
                 destination.write(chunk)
             path = os.path.join(settings.MEDIA_URL, "test.jpg").replace("\\", "/")
         print(f"path: {path}")
+        style_path = "."+path
         image = Image.open("." + path)
         if image.mode == "P":
             image = image.convert('RGB')
@@ -74,15 +79,20 @@ def result(request):
         r_image, result = yolo.detect_image(image)
         print("辨識完成，輸出檔案")
         yolo.clear_session()
-        # r_image.show()
         path = path.replace("test.jpg", "out.jpg")
+        r_image = r_image.convert('RGB')
         r_image.save(path[1:])
         print(result)
-        if len(result) != 1:
+        if len(result) > 1:
             top = result[1]
             bot = result[0]
-        else:
+        elif len(result) == 1:
             top, bot = result[0], result[0]
+        else:
+            top, bot = "",""
+        print('GooleNet 開始分類風格')
+        style_type,percent =style_model.predict(style_path)
+        percent = round(percent*100, 2)
         return render(
             request, "upload/result.html", locals()
         )
@@ -104,14 +114,17 @@ def login(request):
         return redirect("/upload/")
 
 def recommend(request):
-
     if request.is_ajax():
         del request.session['uid']
         msg = 'Successfully log out!'
         return HttpResponse(json.dumps(msg))
     else:
-        option = request.session['option']
-        print(option)
+        try :
+            option = request.POST['select_style']
+        except:
+            option = 'denim'
+        request.session['option'] = option        
+        # print(option)
         style = Product.objects.filter(style=option)
         path = []
         topURL = []

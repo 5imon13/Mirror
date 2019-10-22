@@ -45,37 +45,39 @@ def load_labels(label_file):
         label.append(l.rstrip())
     return label
 
+# file_name = "17.jpg"
 
-file_name = "17.jpg"
+def predict(path):
+    file_name = path
+    model_file = "upload/model_data/output_graph.pb"
+    label_file = "upload/model_data/output_labels.txt"
+    input_height = 299
+    input_width = 299
+    input_mean = 0
+    input_std = 255
+    input_layer = "Placeholder"
+    output_layer = "final_result"
+    graph = load_graph(model_file)
+    t = read_tensor_from_image_file(
+        file_name,
+        input_height=input_height,
+        input_width=input_width,
+        input_mean=input_mean,
+        input_std=input_std,
+    )
 
+    input_name = "import/" + input_layer
+    output_name = "import/" + output_layer
+    input_operation = graph.get_operation_by_name(input_name)
+    output_operation = graph.get_operation_by_name(output_name)
 
-model_file = "./tmp/output_graph.pb"
-label_file = "./tmp/output_labels.txt"
-input_height = 299
-input_width = 299
-input_mean = 0
-input_std = 255
-input_layer = "Placeholder"
-output_layer = "final_result"
-graph = load_graph(model_file)
-t = read_tensor_from_image_file(
-    file_name,
-    input_height=input_height,
-    input_width=input_width,
-    input_mean=input_mean,
-    input_std=input_std,
-)
+    with tf.compat.v1.Session(graph=graph) as sess:
+        results = sess.run(output_operation.outputs[0], {input_operation.outputs[0]: t})
+    results = np.squeeze(results)
 
-input_name = "import/" + input_layer
-output_name = "import/" + output_layer
-input_operation = graph.get_operation_by_name(input_name)
-output_operation = graph.get_operation_by_name(output_name)
-
-with tf.compat.v1.Session(graph=graph) as sess:
-    results = sess.run(output_operation.outputs[0], {input_operation.outputs[0]: t})
-results = np.squeeze(results)
-
-top_k = results.argsort()[-5:][::-1]
-labels = load_labels(label_file)
-for i in top_k:
-    print(labels[i], results[i])
+    top_k = results.argsort()[-5:][::-1]
+    labels = load_labels(label_file)
+    for i in top_k:
+        print(labels[i], results[i])
+    
+    return labels[top_k[0]], results[top_k[0]]

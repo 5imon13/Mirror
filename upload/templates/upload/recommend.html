@@ -69,7 +69,7 @@
                     {% csrf_token %}
                     <div class="card-body">
                         <div style="height: 500px" class=" my-5 text-center">
-                            <div id="carouselExampleIndicators" class="carousel slide">
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active ">
                                         <img class="d-block w-100 img-fluid" src="{{path.0}}" alt="First slide">
@@ -126,12 +126,12 @@
             var currentIndex = $('.carousel-item.active').index();
             var top = {{topURL|safe}};
             // alert( top[1]);
-            window.location=top[currentIndex];
+            window.open(top[currentIndex]);
         });
         $('#botURL').click(function(){
             var currentIndex = $('.carousel-item.active').index();
             var bot = {{botURL|safe}};
-            window.location=bot[currentIndex];
+            window.open(bot[currentIndex]);
         });
     </script>
 </body>

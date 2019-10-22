@@ -56,20 +56,20 @@
         }
     </style>
     <div class="container my-4">
-            <div class="row align-items-end my-2">
-                    <div class="col-3 col-md-3 offset-md-3">
-                        {% if status != "login" %}
-                        <row>
-                            <a href="/upload/login/" class="btn btn-primary btn-sm" role="button" aria-disabled="true">登入</a>
-                        </row>
-                        {% else %}
-                        <row>
-                            <span>Hello, {{ user }}</span>
-                            <button type="button" class="btn btn-primary btn-sm" id="logout">登出</button>
-                        </row>
-                        {% endif%}
-                    </div>
-                </div>
+        <div class="row align-items-end my-2">
+            <div class="col-3 col-md-3 offset-md-3">
+                {% if status != "login" %}
+                <row>
+                    <a href="/upload/login/" class="btn btn-primary btn-sm" role="button" aria-disabled="true">登入</a>
+                </row>
+                {% else %}
+                <row>
+                    <span>Hello, {{ user }}</span>
+                    <button type="button" class="btn btn-primary btn-sm" id="logout">登出</button>
+                </row>
+                {% endif%}
+            </div>
+        </div>
         <div class="row">
             <div class="col-10 col-md-6 offset-1 offset-md-3 card border-0 shadow">
                 <div class="card-body">
@@ -87,7 +87,7 @@
                                 <div class="card-body">
                                     <h6 class="card-title">穿搭風格為:</h6>
                                     <p class="card-text text-left">
-                                        <span id="type">單寧</span>: <span id="percent">87</span>%<br>
+                                        <span id="type">{{style_type}}</span>: <span id="percent">{{percent}}</span>%<br>
                                         <br>
                                         上衣: {{top.class}}<br>
                                         下著: {{bot.class}}<br>
@@ -96,32 +96,28 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle btn-lg btn-block" type="button"
-                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    推薦風格
-                                </button>
-                                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-                                    <button class="dropdown-item" type="button">商務風</button>
-                                    <button class="dropdown-item" type="button">運動風</button>
-                                    <button class="dropdown-item" type="button">單寧風</button>
-                                    <button class="dropdown-item" type="button">洋裝</button>
-                                    <button class="dropdown-item" type="button">其他</button>
-                                </div>
+                    <form action="/upload/recommend/" method="post">
+                        <div class="row">
+
+                            <div class="col">
+                                <select class="custom-select custom-select-lg" name="select_style">
+                                    <option selected>推薦風格</option>
+                                    <option value="denim">單寧風</option>
+                                    <option value="business">商務風</option>
+                                    <option value="dress">洋裝</option>
+                                    <option value="sport">運動風</option>
+                                    <option value="other">其他</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="col">
-                            <form action="/upload/recommend/" method="post">
+                            <div class="col">
                                 <button type="submit" class="btn btn-dark btn-lg btn-block">推薦穿搭</button>
-                            </form>
+                            </div>
+
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-            
+
         </div>
     </div>
     <script>
