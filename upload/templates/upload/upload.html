@@ -54,7 +54,6 @@
         }
 
         .fitstyle {
-
             height: 100%;
             object-fit: cover;
             overflow: hidden;
@@ -82,13 +81,15 @@
                     {% csrf_token %}
                     <div class="card-body">
                         <div class="row mx-1  justify-content-between">
-                            <div class="col-4 align-self-start">
-
+                            <div class="col-4 ">
+                                <label for="uImage" class="btn btn-sm btn-primary" style="display:none" id="reupload">
+                                    <i class="fas fa-cloud-upload-alt fa-x"> 重新上傳</i></label>
                             </div>
-                            <div class="col-2 col-md-2 align-self-end">
+
+                            <div class="col-2 col-md-2 ">
                                 <input type="checkbox" data-toggle="toggle" data-on="上傳照片" data-off="使用鏡頭"
                                     data-style="ios" data-size="small" id="upload_mode" data-onstyle="primary"
-                                    data-offstyle="danger" checked>
+                                    data-offstyle="danger" checked name="upload_mode">
                             </div>
                         </div>
                         <div style="height: 500px"
@@ -117,6 +118,7 @@
     <script>
         var player = document.getElementById('player');
         var snapshotCanvas = document.getElementById('snapshot');
+        var reuploadBtn = document.getElementById('reupload');
 
         function showImg(thisimg) {
             var file = thisimg.files[0];
@@ -131,6 +133,7 @@
                 showimg.style.display = 'block';
                 var icon = document.getElementById('uploadIcon')
                 icon.style.display = 'none';
+                reuploadBtn.style.display = 'inline';
             }
         }
         var handleSuccess = function (stream) {
