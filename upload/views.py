@@ -23,9 +23,14 @@ import upload.label_image as style_model
 from upload.yolo import YOLO
 import face_recognition
 
-global count
 @csrf_exempt
 def index(request):
+    template = loader.get_template("upload/index.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+@csrf_exempt
+def upload(request):
     if request.is_ajax():
         del request.session['uid']
         msg = 'Successfully log out!'
@@ -63,12 +68,23 @@ def result(request):
         
     elif request.method == "POST":
         request.session['option'] = 'denim'
-        f = request.FILES["imageUpload"]
-        with open(os.path.join(settings.MEDIA_ROOT, "test.jpg"), "wb+") as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
+
+        if 'upload_mode' in request.POST:
+            f = request.FILES["imageUpload"]
+        # print(request.POST['canvasData'])
+            with open(os.path.join(settings.MEDIA_ROOT, "test.jpg"), "wb+") as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+                path = os.path.join(settings.MEDIA_URL, "test.jpg").replace("\\", "/")
+            print(f"path: {path}")
+            
+            
+        else:
+            image = request.POST['canvasData'].split(',')[1]
+            imgdata = base64.b64decode(image)
             path = os.path.join(settings.MEDIA_URL, "test.jpg").replace("\\", "/")
-        print(f"path: {path}")
+            with open(path[1:], 'wb') as f:
+                f.write(imgdata)
         style_path = "."+path
         image = Image.open("." + path)
         if image.mode == "P":
@@ -93,9 +109,15 @@ def result(request):
         print('GooleNet 開始分類風格')
         style_type,percent =style_model.predict(style_path)
         percent = round(percent*100, 2)
-        return render(
-            request, "upload/result.html", locals()
-        )
+        if 'uid' not in request.session:
+            return render(request, "upload/result.html", locals())
+        else:
+            status = 'login'
+            user = request.session['uid']
+            return render(request,"upload/result.html",locals())
+        # return render(
+        #     request, "upload/result.html", locals()
+        # )
 
 @csrf_exempt
 def login(request):
@@ -111,7 +133,7 @@ def login(request):
             f.write(imgdata)
         name = face.detec()
         request.session['uid'] = name
-        return redirect("/upload/")
+        return redirect("/upload/upload/")
 
 def recommend(request):
     if request.is_ajax():

@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
-    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap4.min.js' %}"></script>
     <title>Mirror</title>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
@@ -20,7 +20,7 @@
 <body>
     <style>
         body {
-            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'upload/media/background.png' %}") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             background-size: cover;
@@ -28,7 +28,7 @@
         }
 
         .card {
-            background-color: rgba(70, 70, 77, 0.4);
+            background-color: rgba(70, 70, 77, 0.80);
             color: #fff;
             font-weight: bolder;
             border-radius: 15px;
@@ -43,7 +43,7 @@
             cursor: pointer;
         }
 
-        .fit-image {
+        .fitstyle {
             object-fit: cover;
             height: 100%;
             overflow: hidden;
@@ -51,29 +51,29 @@
     </style>
     <div class="container my-4">
         <div class="row align-items-end my-2">
-            <div class="col-3 col-md-3 offset-md-3">
+            <div class="col-3 col-sm-3 offset-sm-3">
                 {% if status != "login" %}
                 <row>
-                    <a href="/upload/login/" class="btn btn-primary btn-sm" role="button" aria-disabled="true">登入</a>
+                    <a href="/upload/login/" class="btn btn-primary btn-sm " role="button" aria-disabled="true">登入</a>
                 </row>
                 {% else %}
                 <row>
-                    <span>Hello, {{ user }}</span>
-                    <button type="button" class="btn btn-primary btn-sm" id="logout">登出</button>
+                    <span style="color:#fff">Hello, {{ user }}</span>
+                    <button type="button" class="btn btn-primary btn-sm " id="logout">登出</button>
                 </row>
                 {% endif%}
             </div>
         </div>
         <div class="row">
-            <div class="col-10 col-md-6 offset-1 offset-md-3 card border-0 shadow">
-                <form action="" method="post" enctype="multipart/form-data">
+            <div class="col-10 col-sm-6 offset-1 offset-sm-3 card border-0 shadow">
+                <form action="" method="post" enctype="multipart/form-data" id="style_menu">
                     {% csrf_token %}
                     <div class="card-body">
                         <div style="height: 500px" class=" my-5 text-center">
                             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                                <div class="carousel-inner">
+                                <div class="carousel-inner fit-image">
                                     <div class="carousel-item active ">
-                                        <img class="d-block w-100 img-fluid" src="{{path.0}}" alt="First slide">
+                                        <img class="d-block w-100 img-fluid " src="{{path.0}}" alt="First slide">
                                     </div>
                                     <div class="carousel-item ">
                                         <img class="d-block w-100 img-fluid" src="{{path.1}}" alt="Second slide">
@@ -102,36 +102,51 @@
                             </div>
 
                         </div>
-
                         <div class="row">
-                            <button type="button" class="btn btn-dark btn-lg btn-block" id='topURL'>購買上衣</button>
-                            <button type="button" class="btn btn-dark btn-lg btn-block" id='botURL'>購買下著</button>
+                            <div class="col-4 ">
+                                <select class="custom-select custom-select-lg" id="select_style" name="select_style"
+                                    onchange="this.form.submit()">
+                                    <option selected>推薦風格</option>
+                                    <option value="denim">單寧風</option>
+                                    <option value="business">商務風</option>
+                                    <option value="sport">運動風</option>
+                                </select>
+                            </div>
+
+                            <div class="col-8 btn-group " role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-primary btn-lg " id='topURL'>購買上衣</button>
+                                <button type="button" class="btn btn-primary btn-lg " id='botURL'>購買下著</button>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
     <script>
         $(function () {
-
             $('#logout').click(function () {
-                $.post('/upload/', true, function (msg) {
+                $.post('/upload/upload/', true, function (msg) {
                     alert(msg)
                     location.reload();
                 }, 'json');
             });
         });
-        $('#topURL').click(function(){
+        // $(function () {
+        //     $('#select_style').select(function () {
+        //         $('#style_menu').submit();
+        //         location.reload();
+        //     });
+        // });
+        $('#topURL').click(function () {
             var currentIndex = $('.carousel-item.active').index();
-            var top = {{topURL|safe}};
+            var top = {{topURL | safe}};
             // alert( top[1]);
             window.open(top[currentIndex]);
         });
-        $('#botURL').click(function(){
+        $('#botURL').click(function () {
             var currentIndex = $('.carousel-item.active').index();
-            var bot = {{botURL|safe}};
+            var bot = {{botURL | safe}};
             window.open(bot[currentIndex]);
         });
     </script>

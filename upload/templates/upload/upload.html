@@ -6,21 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
-    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap4.min.js' %}"></script>
     <title>Mirror</title>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'upload/css/mirror.css' %}">
+
 </head>
 
 <body>
     <style>
         body {
-            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'upload/media/background.png' %}") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             background-size: cover;
@@ -38,7 +40,7 @@
         }
 
         .card {
-            background-color: rgba(70, 70, 77, 0.4);
+            background-color: rgba(70, 70, 77, 0.80);
             color: #fff;
             font-weight: bolder;
             border-radius: 15px;
@@ -61,53 +63,61 @@
     </style>
     <div class="container my-4">
         <div class="row align-items-end my-2">
-            <div class="col-3 col-md-3 offset-md-3">
+            <div class="col-3 col-sm-3 offset-sm-2">
                 {% if status != "login" %}
                 <row>
-                    <a href="/upload/login/" class="btn btn-primary btn-sm" role="button" aria-disabled="true">登入</a>
+                    <a href="/upload/login/" class="btn btn-primary btn-sm " role="button" aria-disabled="true">登入</a>
                 </row>
                 {% else %}
                 <row>
-                    <span>Hello, {{ user }}</span>
-                    <button type="button" class="btn btn-primary btn-sm" id="logout">登出</button>
+                    <span style="color:#fff">Hello, {{ user }}</span>
+                    <button type="button" class="btn btn-primary btn-sm " id="logout">登出</button>
                 </row>
                 {% endif%}
             </div>
         </div>
         <div class="row">
-            <div class="col-10 col-md-6 offset-1 offset-md-3 card border-0 shadow">
+            <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow">
                 <form action="/upload/result/" method="post" enctype="multipart/form-data"
                     onsubmit="yolo_btn.disabled = true; return true;">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="row mx-1  justify-content-between">
+                        <div class="row my-3  justify-content-around">
                             <div class="col-4 ">
                                 <label for="uImage" class="btn btn-sm btn-primary" style="display:none" id="reupload">
                                     <i class="fas fa-cloud-upload-alt fa-x"> 重新上傳</i></label>
+                                <button type="button" class="btn btn-sm btn-primary" id="capture" style="display:none"><i
+                                        class="fas fa-camera"> 拍照</i></button>
                             </div>
-
-                            <div class="col-2 col-md-2 ">
+                            <div class="col-4 ">
+                                    <h3 class="font-weight-bold" style="display: none" id="count">5</h3>
+                            </div>
+                            <div class="col-4 col-sm-2 ">
                                 <input type="checkbox" data-toggle="toggle" data-on="上傳照片" data-off="使用鏡頭"
                                     data-style="ios" data-size="small" id="upload_mode" data-onstyle="primary"
                                     data-offstyle="danger" checked name="upload_mode">
+                                    
                             </div>
+
+                        
                         </div>
                         <div style="height: 500px"
                             class="row border border-3 my-3 text-center justify-content-center align-items-center">
-                            <label for="uImage" class="btn btn-primary" id='uploadIcon'><i
+                            <label for="uImage" class="btn btn-primary " id='uploadIcon'><i
                                     class="fas fa-cloud-upload-alt fa-3x"></i></label>
                             <input type="file" id="uImage" name="imageUpload" accept="image/*" style="display: none"
-                                class="btn btn-dark btn-lg" onchange="showImg(this)"></input>
+                                class="btn btn-primary btn-lg" onchange="showImg(this)"></input>
                             <img id="showimg" src="" class="fitstyle" style="display:none;" />
                             {% comment %}
                             <img id="camimg" src="{% url 'livefeed' %}"
                                 style="display:none; height:480px; width:360px" />
                             {% endcomment %}
                             <video id="player" class="fitstyle" autoplay style="display:none"></video>
-                            <canvas id="snapshot" style="display:none"></canvas>
+                            <canvas id="snapshot" style="display:none" height="320" width="400"></canvas>
+                            <input type="hidden" name="canvasData" id="my_hidden">
                         </div>
                         <div class="row">
-                            <button type="submit" class="btn btn-dark btn-lg btn-block" id="yolo_btn">分析風格</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block mirrorBtn" id="yolo_btn">分析風格</button>
                         </div>
                     </div>
                 </form>
@@ -119,6 +129,8 @@
         var player = document.getElementById('player');
         var snapshotCanvas = document.getElementById('snapshot');
         var reuploadBtn = document.getElementById('reupload');
+        var photoBtn = document.getElementById('capture');
+
 
         function showImg(thisimg) {
             var file = thisimg.files[0];
@@ -141,30 +153,59 @@
             player.srcObject = stream;
         };
 
-        // captureButton.addEventListener('click', function () {
-        //     var context = snapshot.getContext('2d');
-        //     // Draw the video frame to the canvas.
-        //     context.drawImage(player, 0, 0, snapshotCanvas.width,
-        //         snapshotCanvas.height);
-        //     save();
-        // });
+        photoBtn.addEventListener('click', function () {
+            player.style.display = 'block';
+            snapshotCanvas.style.display = 'none';
+
+            var context = snapshotCanvas.getContext('2d');
+            var counter = 5;
+            var counterNum = document.getElementById('count');
+            counterNum.style.display = 'inline';
+            counterNum.textContent = counter
+            var interval = setInterval(function () {
+                counter--;
+                counterNum.textContent = counter;
+                // Display 'counter' wherever you want to display it.
+                if (counter == 0) {
+                    context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+                    save();
+                    clearInterval(interval);
+                    counterNum.style.display = 'none';
+                }
+            }, 1000);
+            // Draw the video frame to the canvas
+        });
 
         navigator.mediaDevices.getUserMedia({
                 video: true
             })
             .then(handleSuccess);
 
+        function save() {
+            var canvas = document.getElementById('snapshot');
+            document.getElementById('my_hidden').value = canvas.toDataURL('image/png');
+            player.style.display = 'none';
+            canvas.style.display = 'block';
+            // photoBtn.disabled = 'true';
+            // document.forms["headshot"].submit();
+        }
         $(function () {
             $('#upload_mode').change(function () {
-                if ($("#upload_mode").is(':checked')) {
-                    $('#uploadIcon').show()
-                    // $('#camimg').hide()
-                    $('#player').hide()
+                //upload image
+                if ($('#upload_mode').is(':checked')) {
+                    $('#uploadIcon').show();
+                    // $('#camimg').hide();
+                    $('#player').hide();
+                    $('#snapshot').hide();
+                    $('#capture').hide();
                 } else {
-                    $('#showimg').hide()
+                    $('#showimg').hide();
                     // $('#camimg').show();
                     $('#player').show();
-                    $('#uploadIcon').hide()
+                    $('#uploadIcon').hide();
+                    $('#capture').show();
+                    $('#reupload').hide();
+
                 }
                 // if ($('#upload_mode').prop("checked", false)) {
                 // var icon = document.getElementById('uploadIcon')
@@ -183,10 +224,9 @@
                 //     var icon = document.getElementById('uploadIcon');
                 //     icon.style.display = 'block';
                 // }
-
             });
             $('#logout').click(function () {
-                $.post('/upload/', true, function (msg) {
+                $.post('/upload/upload/', true, function (msg) {
                     alert(msg)
                     location.reload();
                 }, 'json');
