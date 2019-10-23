@@ -6,18 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
-    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap4.min.js' %}"></script>
     <title>Mirror</title>
 </head>
 
 <body>
     <style>
         body {
-            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'upload/media/background.png' %}") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             background-size: cover;
@@ -25,7 +25,7 @@
         }
 
         .card {
-            background-color: rgba(70, 70, 77, 0.4);
+            background-color: rgba(70, 70, 77, 0.80);
             color: #fff;
             border-radius: 15px;
         }
@@ -51,7 +51,7 @@
     </style>
     <div class="container my-4">
         <div class="row">
-            <div class="col-10 col-md-6 offset-1 offset-md-3 card border-0 shadow">
+            <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow">
                 <div class="card-body">
                     <div class="row mx-1 text-center">
                         <div class="col">
@@ -65,7 +65,7 @@
 
                     <form action="" method="POST" id="headshot" enctype="multipart/form-data">
                         <input type="hidden" name="canvasData" id="my_hidden">
-                        <button type="button" id="capture" class="btn btn-dark btn-lg btn-block">登入</button>
+                        <button type="button" id="capture" class="btn btn-primary btn-lg btn-block">登入</button>
                     </form>
                 </div>
             </div>

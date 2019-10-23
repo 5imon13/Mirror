@@ -6,43 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'upload/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
-    <script src="{% static 'upload/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap4.min.js' %}"></script>
     <title>Mirror</title>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'upload/css/mirror.css' %}">
+
 </head>
 
 <body>
     <style>
         body {
-            background: url("{% static 'upload/media/background.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'upload/media/background.png' %}") no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             background-size: cover;
             -o-background-size: cover;
         }
 
-        .toggle.ios,
-        .toggle-on.ios,
-        .toggle-off.ios {
-            border-radius: 15px;
-        }
-
-        .toggle.ios .toggle-handle {
-            border-radius: 50%;
-        }
-
         .card {
-            background-color: rgba(70, 70, 77, 0.4);
+            background-color: rgba(70, 70, 77, 0.80);
             color: #fff;
             border-radius: 15px;
         }
-
+        .innercard {
+            background-color: rgba(83, 143, 221, 0.8);
+            color: #fff;
+            border-radius: 15px;
+        }
         .border-3 {
             border-width: 3px !important;
             border-style: dashed !important;
@@ -57,21 +53,21 @@
     </style>
     <div class="container my-4">
         <div class="row align-items-end my-2">
-            <div class="col-3 col-md-3 offset-md-3">
+            <div class="col-3 col-sm-3 offset-sm-2">
                 {% if status != "login" %}
                 <row>
-                    <a href="/upload/login/" class="btn btn-primary btn-sm" role="button" aria-disabled="true">登入</a>
+                    <a href="/upload/login/" class="btn btn-primary btn-sm " role="button" aria-disabled="true">登入</a>
                 </row>
                 {% else %}
                 <row>
-                    <span>Hello, {{ user }}</span>
-                    <button type="button" class="btn btn-primary btn-sm" id="logout">登出</button>
+                    <span style="color:#fff">Hello, {{ user }}</span>
+                    <button type="button" class="btn btn-primary btn-sm " id="logout">登出</button>
                 </row>
                 {% endif%}
             </div>
         </div>
         <div class="row">
-            <div class="col-10 col-md-6 offset-1 offset-md-3 card border-0 shadow">
+            <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow">
                 <div class="card-body">
                     <div class="row mx-1 text-center">
                         <div class="col">
@@ -80,15 +76,15 @@
                     </div>
                     <div class="row">
                         <div class="col-3">
-                            <a href="/upload/" class="btn btn-danger" role="button" aria-disabled="true">回上一頁</a>
+                            <a href="/upload/upload/" class="btn btn-danger mirrorBtn" role="button" aria-disabled="true">回上一頁</a>
                         </div>
                     </div>
-                    <div style="height: 500px" class="row my-3 text-center justify-content-center align-items-center">
-                        <div class="col-8">
+                    <div style="height: 500px" class="row text-center justify-content-center align-items-center">
+                        <div class="col-6 border-3">
                             <img src="{{path}}" alt="">
                         </div>
-                        <div class="col-4">
-                            <div class="card" style="height: 200px">
+                        <div class="col-6">
+                            <div class="innercard" style="height: 300px">
                                 <div class="card-body">
                                     <h6 class="card-title">穿搭風格為:</h6>
                                     <p class="card-text text-left">
@@ -103,7 +99,6 @@
                     </div>
                     <form action="/upload/recommend/" method="post">
                         <div class="row">
-
                             <div class="col">
                                 <select class="custom-select custom-select-lg" name="select_style">
                                     <option selected>推薦風格</option>
@@ -111,11 +106,10 @@
                                     <option value="business">商務風</option>
                                     {# <option value="dress">洋裝</option> #}
                                     <option value="sport">運動風</option>
-                                    <option value="other">其他</option>
                                 </select>
                             </div>
                             <div class="col">
-                                <button type="submit" class="btn btn-dark btn-lg btn-block">推薦穿搭</button>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block mirrorBtn">推薦穿搭</button>
                             </div>
 
                         </div>
@@ -126,10 +120,12 @@
         </div>
     </div>
     <script>
-        // $('.dropdown-menu button').click(function(){
-        //     // $('#selected').text($(this).text());
-        //     $('#dropdownMenuButton').text($('#selected').text)
-        // });
+        $('#logout').click(function () {
+                $.post('/upload/upload/', true, function (msg) {
+                    alert(msg)
+                    location.reload();
+                }, 'json');
+            });
     </script>
 </body>
 
