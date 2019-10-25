@@ -54,10 +54,8 @@ else {
     };
     recognition.onend = function() {                 // 辨識完成
         recognizing = false;
-<<<<<<< HEAD
         console.log('end_record');
-=======
->>>>>>> c5af44ac56cc9286e86a137085aaf2837794de36
+
         // infoBox.innerText = "";
     };
     recognition.onresult = function(event) {                // 辨識有任何結果時
