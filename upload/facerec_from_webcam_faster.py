@@ -113,7 +113,10 @@ def detec():
     # cv2.imshow('',rgb_small_frame)
     out_path = os.path.join(settings.MEDIA_URL, "out_face.jpg").replace("\\", "/")
     cv2.imwrite(out_path[1:], img)
-    return face_names[0]
+    if len(face_names) > 0:
+        return face_names[0]
+    else:
+        return 'Unknown'
 
     # if cv2.waitKey(1) & 0xFF == ord('p'):
     #     cv2.imwrite('./output.jpg', frame)

@@ -21,10 +21,10 @@ from keras.backend import clear_session
 
 class YOLO(object):
     _defaults = {
-        "model_path": 'upload/model_data/temp.h5',
+        "model_path": 'upload/model_data/yolo.h5',
         "anchors_path": 'upload/model_data/yolo_anchors.txt',
         "classes_path": 'upload/model_data/voc_classes.txt',
-        "score" : 0.3,
+        "score" : 0.1,
         "iou" : 0.45,
         "model_image_size" : (416, 416),
         "gpu_num" : 1,
@@ -136,17 +136,54 @@ class YOLO(object):
         
         print(out_scores)
         print(out_classes)
+        topItem = ['正裝外套','背心','運動上衣','丹寧襯衫','丹寧外套','露背裝','襯衫','法藍絨','夾克','連帽外套','毛衣','T恤']
+        botIten = ['西裝褲','褲裝','裙裝','慢跑褲','緊身褲','運動褲','運動短褲','牛仔褲','卡其褲','牛仔短褲','短褲','裙子']
+        fullItem = ['洋裝','大衣','連身褲']
+        topI = {}
+        botI = {}
+        fullI = {}
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
             box = out_boxes[i]
             score = out_scores[i]
-            item = {}
-            item['class'] = predicted_class
-            item['box'] = box
-            item['score'] = score
-            result.append(item)
-
-            label = '{} {:.2f}'.format(predicted_class, score)
+    
+            
+            # item['class'] = predicted_class
+            # item['box'] = box
+            # item['score'] = score
+            # result.append(item)
+            
+            if predicted_class in topItem:
+                if 'score' not in topI or topI['score'] < score:
+                    topI['type'] = 'top'
+                    topI['class'] = predicted_class
+                    topI['box'] = box
+                    topI['score'] = score
+                else:
+                    continue
+                # result.append(item)
+            elif predicted_class in botIten:
+                if 'score' not in botI or botI['score'] < score:
+                    botI['type'] = 'bot'
+                    botI['class'] = predicted_class
+                    botI['box'] = box
+                    botI['score'] = score
+                else:
+                    continue
+                # result.append(item)
+            elif predicted_class in fullItem:
+                if 'score' not in fullI or fullI['score'] < score:
+                    fullI['type'] = 'full'
+                    fullI['class'] = predicted_class
+                    fullI['box'] = box
+                    fullI['score'] = score
+                else:
+                    continue
+                # result.append(item)
+            
+            
+            # label = '{} {:.2f}'.format(predicted_class, score)
+            label = '{}'.format(predicted_class)
             draw = ImageDraw.Draw(image)
             label_size = draw.textsize(label, font)
 
@@ -173,6 +210,12 @@ class YOLO(object):
             draw.text(text_origin, label, fill=(0, 0, 0), font=font)
             del draw
 
+        if len(topI)>0:
+            result.append(topI)
+        if len(botI)>0:
+            result.append(botI)
+        if len(fullI)>0:
+            result.append(fullI)
         end = timer()
         print(end - start)
         print(result)

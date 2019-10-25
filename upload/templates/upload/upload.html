@@ -57,49 +57,66 @@
 
         .fitstyle {
             height: 100%;
-            object-fit: cover;
+            width: 100%;
+            object-fit: contain;
             overflow: hidden;
         }
     </style>
-    <div class="container my-4">
-        <div class="row align-items-end my-2">
-            <div class="col-3 col-sm-3 offset-sm-2">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/upload/">魔鏡Mirror</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload/upload/">上傳穿搭 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload/predict/">尺寸預測</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-5 ">
                 {% if status != "login" %}
-                <row>
-                    <a href="/upload/login/" class="btn btn-primary btn-sm " role="button" aria-disabled="true">登入</a>
-                </row>
+                <li class="nav-item">
+                    <a href="/upload/login/" class="nav-link">登入</a>
+                </li>
                 {% else %}
-                <row>
-                    <span style="color:#fff">Hello, {{ user }}</span>
-                    <button type="button" class="btn btn-primary btn-sm " id="logout">登出</button>
-                </row>
+                <li class="nav-item">
+                    <span style="color:#fff" class="navbar-text ">Hello, {{ user }}</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logout" href="#">登出</a>
+                </li>
                 {% endif%}
-            </div>
+            </ul>
         </div>
+    </nav>
+    <div class="container my-4">
+
         <div class="row">
             <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow">
-                <form action="/upload/result/" method="post" enctype="multipart/form-data"
-                    onsubmit="yolo_btn.disabled = true; return true;">
+                <form action="/upload/result/" method="post" enctype="multipart/form-data" onsubmit=handleBtn()>
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="row my-3  justify-content-around">
+                        <div class="row my-4  justify-content-around">
                             <div class="col-4 ">
-                                <label for="uImage" class="btn btn-sm btn-primary" style="display:none" id="reupload">
+                                <label for="uImage" class="btn btn-sm btn-primary mirrorBtn" style="display:none"
+                                    id="reupload">
                                     <i class="fas fa-cloud-upload-alt fa-x"> 重新上傳</i></label>
-                                <button type="button" class="btn btn-sm btn-primary" id="capture" style="display:none"><i
-                                        class="fas fa-camera"> 拍照</i></button>
+                                <button type="button" class="btn btn-sm btn-primary mirrorBtn" id="capture"
+                                    style="display:none"><i class="fas fa-camera"> 拍照</i></button>
                             </div>
                             <div class="col-4 ">
-                                    <h3 class="font-weight-bold" style="display: none" id="count">5</h3>
+                                <h3 class="font-weight-bold" style="display: none" id="count">5</h3>
                             </div>
                             <div class="col-4 col-sm-2 ">
                                 <input type="checkbox" data-toggle="toggle" data-on="上傳照片" data-off="使用鏡頭"
                                     data-style="ios" data-size="small" id="upload_mode" data-onstyle="primary"
                                     data-offstyle="danger" checked name="upload_mode">
-                                    
                             </div>
-
-                        
                         </div>
                         <div style="height: 500px"
                             class="row border border-3 my-3 text-center justify-content-center align-items-center">
@@ -117,7 +134,8 @@
                             <input type="hidden" name="canvasData" id="my_hidden">
                         </div>
                         <div class="row">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block mirrorBtn" id="yolo_btn">分析風格</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block mirrorBtn" id="yolo_btn"
+                                disabled>分析風格</button>
                         </div>
                     </div>
                 </form>
@@ -130,6 +148,8 @@
         var snapshotCanvas = document.getElementById('snapshot');
         var reuploadBtn = document.getElementById('reupload');
         var photoBtn = document.getElementById('capture');
+        var yoloBtn = document.getElementById('yolo_btn');
+        var toggleBox = document.getElementById('upload_mode');
 
 
         function showImg(thisimg) {
@@ -146,6 +166,7 @@
                 var icon = document.getElementById('uploadIcon')
                 icon.style.display = 'none';
                 reuploadBtn.style.display = 'inline';
+                yoloBtn.disabled = false;
             }
         }
         var handleSuccess = function (stream) {
@@ -156,7 +177,7 @@
         photoBtn.addEventListener('click', function () {
             player.style.display = 'block';
             snapshotCanvas.style.display = 'none';
-
+            toggleBox.disabled = true;
             var context = snapshotCanvas.getContext('2d');
             var counter = 5;
             var counterNum = document.getElementById('count');
@@ -171,11 +192,21 @@
                     save();
                     clearInterval(interval);
                     counterNum.style.display = 'none';
+                    toggleBox.disabled = false;
+                    yoloBtn.disabled = false;
                 }
             }, 1000);
             // Draw the video frame to the canvas
         });
 
+        function handleBtn() {
+            // document.forms["headshot"].submit();
+            yoloBtn.disabled = true;
+            reupload.style.display = 'none';
+            photoBtn.style.display = 'none';
+
+            return true;
+        }
         navigator.mediaDevices.getUserMedia({
                 video: true
             })
@@ -207,23 +238,6 @@
                     $('#reupload').hide();
 
                 }
-                // if ($('#upload_mode').prop("checked", false)) {
-                // var icon = document.getElementById('uploadIcon')
-                // icon.style.display = 'none';
-                // $('#camimg').show()
-                // $.post('/upload/', true, function (path) {
-                //     alert(path['path']);
-                //     $('#camimg').attr('src', "path['path']"); 
-                // }, 'json');
-                // $('#camimg').show();
-                //     var icon = document.getElementById('uploadIcon');
-                //     icon.style.display = 'none';
-
-                // } else if ($('#upload_mode').prop("checked", true)) {
-                //     $('#camimg').hide();
-                //     var icon = document.getElementById('uploadIcon');
-                //     icon.style.display = 'block';
-                // }
             });
             $('#logout').click(function () {
                 $.post('/upload/upload/', true, function (msg) {

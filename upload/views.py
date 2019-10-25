@@ -22,6 +22,9 @@ import upload.facerec_from_webcam_faster as face
 import upload.label_image as style_model
 from upload.yolo import YOLO
 import face_recognition
+import pandas as pd
+import xgboost
+from upload.Size import predictSize
 
 @csrf_exempt
 def index(request):
@@ -99,16 +102,34 @@ def result(request):
         r_image = r_image.convert('RGB')
         r_image.save(path[1:])
         print(result)
-        if len(result) > 1:
-            top = result[1]
-            bot = result[0]
-        elif len(result) == 1:
-            top, bot = result[0], result[0]
+        if len(result) > 0:
+            for item in result:
+                if item['type'] == 'top':
+                    top = item
+                elif item['type'] == 'bot':
+                    bot = item
+                else:
+                    full = item
+            # top = result[1]
+            # bot = result[0]
+            print('GooleNet 開始分類風格')
+            style_type,percent = style_model.predict(style_path)
+            percent = round(percent*100, 2)
+            if style_type == 'denim':
+                style_type = '單寧風'
+            elif style_type == 'business':
+                style_type = '商務風'
+            elif style_type == 'dress':
+                style_type = '洋裝'
+            elif style_type == 'sport':
+                style_type = '運動風'
+            else:
+                style_type = '其他'
+
         else:
             top, bot = "",""
-        print('GooleNet 開始分類風格')
-        style_type,percent =style_model.predict(style_path)
-        percent = round(percent*100, 2)
+            style_type = "辨識不出服飾，無法判斷風格"
+        
         if 'uid' not in request.session:
             return render(request, "upload/result.html", locals())
         else:
@@ -132,8 +153,11 @@ def login(request):
         with open(path[1:], 'wb') as f:
             f.write(imgdata)
         name = face.detec()
-        request.session['uid'] = name
-        return redirect("/upload/upload/")
+        if name=='Unknown':
+            return redirect("/upload/upload/")
+        else:
+            request.session['uid'] = name
+            return redirect("/upload/upload/")
 
 def recommend(request):
     if request.is_ajax():
@@ -163,3 +187,21 @@ def recommend(request):
             status = 'login'
             user = request.session['uid']
             return render(request,"upload/recommend.html",locals())
+
+def predict(request):
+    if request.is_ajax():
+        reqDict = request.POST.dict()
+        age = reqDict['Age']
+        height = reqDict['Height']
+        weight = reqDict['Weight']
+        bustsize = reqDict['BustSize']
+        bodytype = reqDict['BodyType']
+        resultSize = predictSize(bustsize,weight,bodytype,height,age)    
+        return HttpResponse(json.dumps(resultSize))
+    elif request.method == 'GET':
+        if 'uid' not in request.session:
+            return render(request, "upload/predict.html", locals())
+        else:
+            status = 'login'
+            user = request.session['uid']
+            return render(request,"upload/predict.html",locals())

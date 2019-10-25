@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'upload/css/bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
+    <script src="{% static 'upload/js/jquery.min.js' %}"></script>
+    <script src="{% static 'upload/js/popper.min.js' %}"></script>
+    <script src="{% static 'upload/js/bootstrap4.min.js' %}"></script>
+    <title>Mirror</title>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'upload/css/mirror.css' %}">
+
+</head>
+
+<body>
+    <style>
+        body {
+            background: url("{% static 'upload/media/background.png' %}") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+
+        .card {
+            background-color: rgba(70, 70, 77, 0.80);
+            color: #fff;
+            font-weight: bolder;
+            border-radius: 15px;
+        }
+
+        .border-3 {
+            border-width: 3px !important;
+            border-style: dashed !important;
+        }
+
+        label {
+            cursor: pointer;
+        }
+
+        .fitstyle {
+            object-fit: cover;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/upload/">魔鏡Mirror</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ">
+                    <a class="nav-link" href="/upload/upload/">上傳穿搭 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload/predict/">尺寸預測</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if status != "login" %}
+                <li class="nav-item">
+                    <a href="/upload/login/" class="nav-link">登入</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <span style="color:#fff" class="navbar-text ">Hello, {{ user }}</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logout" href="#">登出</a>
+                </li>
+                {% endif%}
+            </ul>
+        </div>
+    </nav>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow ">
+                <form role="form" id="bodyInfo" method="POST" enctype="multipart/form-data">
+                    <div class="card-body">
+                        <div style="height: 300px" class=" my-5 text-center">
+                            <div class="form-group row">
+                                <label for="inputName4" class="col-sm-2 col-form-label">姓名</label>
+                                <input type="name" class="form-control col-sm-2" id="inputName4" name="username">
+                                <label for="inputAge" class="col-sm-2 offset-sm-2 col-form-label">年齡</label>
+                                <input type="text" class="form-control col-sm-2" id="inputAge" name="Age">
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputheight" class="col-sm-2 col-form-label">身高</label>
+                                <input type="text" class="form-control col-sm-2" id="inputheight" name="Height"><span
+                                    class="align-self-end"> 公分</span>
+                                <label for="inputweight" class="col-sm-2 offset-sm-2 col-form-label">體重</label>
+                                <input type="text" class="form-control col-sm-2" id="inputweight" name="Weight"><span
+                                    class="align-self-end"> 公斤</span>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputBustSize" class="col-sm-2 col-form-label">胸圍</label>
+                                <input type="text" class="form-control col-sm-2" id="inputBustSize"
+                                    name="BustSize"><span class="align-self-end"> 公分</span>
+
+                                <label for="inputBodyType" class="col-sm-2 offset-sm-2 col-form-label">體型</label>
+                                <select id="inputBodyType" class="form-control col-sm-2" name="BodyType">
+                                    <option selected>請選擇</option>
+                                    <option value="0">沙漏型</option>
+                                    <option value="3">肌肉型</option>
+                                    <option value="2">西洋梨型</option>
+                                    <option value="5">極瘦型</option>
+                                    <option value="4">豐滿型</option>
+                                    <option value="1">竹竿型</option>
+                                    <option value="6">蘋果型</option>
+                                </select>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="form-group offset-4 offset-sm-6 col-4 col-sm-4 justify-content-start">
+                                    <span>預測結果</span><br>
+                                    <span>您適合的Size為: <b id='result'></b></span>
+
+                                </div>
+                            </div>
+                            <div class=" form-group row ">
+                                <div class="btn-toolbar offset-1 col-8 justify-content-start" role="toolbar">
+                                    <button type="button" class="btn btn-primary  btn-lg mx-3"
+                                        id='predictBtn'>預測</button>
+                                    <button type="reset" class="btn btn-danger  btn-lg  mx-3"
+                                        id='clearBtn'>取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('#predictBtn').click(function () {
+                var postData = $("#bodyInfo").serialize();
+                $.post('/upload/predict/', postData, function (result) {
+                    $('#result').text(result);
+                }, 'json');
+            });
+            $('#logout').click(function () {
+                $.post('/upload/upload/', true, function (msg) {
+                    alert(msg)
+                    location.reload();
+                }, 'json');
+            });
+            $('#clearBtn').click(function () {
+                $('#result').text('');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -8,9 +8,11 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'upload/css/bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'upload/fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'upload/css/mic_icon.css' %}">
     <script src="{% static 'upload/js/jquery.min.js' %}"></script>
     <script src="{% static 'upload/js/popper.min.js' %}"></script>
     <script src="{% static 'upload/js/bootstrap4.min.js' %}"></script>
+    <script src="{% static 'upload/js/mic_work.js' %}"></script>
     <title>Mirror</title>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
@@ -44,28 +46,52 @@
             border-style: dashed !important;
         }
 
-        img {
+        /* img {
             height: 380px;
             width: auto;
             max-width: 100%;
 
+        } */
+        .fitstyle {
+            object-fit: contain;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
         }
     </style>
-    <div class="container my-4">
-        <div class="row align-items-end my-2">
-            <div class="col-3 col-sm-3 offset-sm-2">
-                {% if status != "login" %}
-                <row>
-                    <a href="/upload/login/" class="btn btn-primary btn-sm " role="button" aria-disabled="true">登入</a>
-                </row>
-                {% else %}
-                <row>
-                    <span style="color:#fff">Hello, {{ user }}</span>
-                    <button type="button" class="btn btn-primary btn-sm " id="logout">登出</button>
-                </row>
-                {% endif%}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/upload/">魔鏡Mirror</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/upload/upload/">上傳穿搭 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/upload/predict/">尺寸預測</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if status != "login" %}
+                    <li class="nav-item">
+                        <a href="/upload/login/" class="nav-link">登入</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <span style="color:#fff" class="navbar-text ">Hello, {{ user }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="logout" href="#">登出</a>
+                    </li>
+                    {% endif%}
+                </ul>
             </div>
-        </div>
+        </nav>
+    <div class="container my-4">
         <div class="row">
             <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow">
                 <div class="card-body">
@@ -73,25 +99,27 @@
                         <div class="col">
                             <h2>風格分析結果</h2>
                         </div>
+                        <input id='startStopButton' type='button' class='mic_icon' onclick='startButton(event)'/>
                     </div>
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-4">
                             <a href="/upload/upload/" class="btn btn-danger mirrorBtn" role="button" aria-disabled="true">回上一頁</a>
                         </div>
                     </div>
-                    <div style="height: 500px" class="row text-center justify-content-center align-items-center">
-                        <div class="col-6 border-3">
-                            <img src="{{path}}" alt="">
+                    <div  class="row text-center justify-content-center align-items-center">
+                        <div class="col-12 col-sm-6 border-3 my-3" style="height: 500px">
+                            <img class="fitstyle" src="{{path}}" alt="">
                         </div>
-                        <div class="col-6">
-                            <div class="innercard" style="height: 300px">
-                                <div class="card-body">
+                        <div class="col-12 col-sm-6">
+                            <div class="innercard mb-3" style="height: 300px">
+                                <div class="card-body cardShadow">
                                     <h6 class="card-title">穿搭風格為:</h6>
                                     <p class="card-text text-left">
-                                        <span id="type">{{style_type}}</span>: <span id="percent">{{percent}}</span>%<br>
+                                        <h3 id="type" style="display: inline">{{style_type}}</h3> : <span id="percent">{{percent}}</span>%<br>
                                         <br>
                                         上衣: {{top.class}}<br>
                                         下著: {{bot.class}}<br>
+                                        全身: {{full.class}}<br>
                                     </p>
                                 </div>
                             </div>
@@ -100,7 +128,7 @@
                     <form action="/upload/recommend/" method="post">
                         <div class="row">
                             <div class="col">
-                                <select class="custom-select custom-select-lg" name="select_style">
+                                <select class="custom-select custom-select" name="select_style" id='select_bar'>
                                     <option selected>推薦風格</option>
                                     <option value="denim">單寧風</option>
                                     <option value="business">商務風</option>
@@ -109,7 +137,7 @@
                                 </select>
                             </div>
                             <div class="col">
-                                <button type="submit" class="btn btn-primary btn-lg btn-block mirrorBtn">推薦穿搭</button>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block mirrorBtn" id='clothes_btn'>推薦穿搭</button>
                             </div>
 
                         </div>

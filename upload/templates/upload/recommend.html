@@ -15,6 +15,8 @@
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'upload/css/mirror.css' %}">
+
 </head>
 
 <body>
@@ -29,7 +31,7 @@
 
         .card {
             background-color: rgba(70, 70, 77, 0.80);
-            color: #fff;
+            color: rgb(196, 146, 8);
             font-weight: bolder;
             border-radius: 15px;
         }
@@ -44,34 +46,53 @@
         }
 
         .fitstyle {
-            object-fit: cover;
+            object-fit: contain;
             height: 100%;
+            width: 100%;
             overflow: hidden;
         }
     </style>
-    <div class="container my-4">
-        <div class="row align-items-end my-2">
-            <div class="col-3 col-sm-3 offset-sm-3">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/upload/">魔鏡Mirror</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ">
+                    <a class="nav-link" href="/upload/upload/">上傳穿搭 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload/predict/">尺寸預測</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
                 {% if status != "login" %}
-                <row>
-                    <a href="/upload/login/" class="btn btn-primary btn-sm " role="button" aria-disabled="true">登入</a>
-                </row>
+                <li class="nav-item">
+                    <a href="/upload/login/" class="nav-link">登入</a>
+                </li>
                 {% else %}
-                <row>
-                    <span style="color:#fff">Hello, {{ user }}</span>
-                    <button type="button" class="btn btn-primary btn-sm " id="logout">登出</button>
-                </row>
+                <li class="nav-item">
+                    <span style="color:#fff" class="navbar-text ">Hello, {{ user }}</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logout" href="#">登出</a>
+                </li>
                 {% endif%}
-            </div>
+            </ul>
         </div>
+    </nav>
+    <div class="container my-4">
         <div class="row">
-            <div class="col-10 col-sm-6 offset-1 offset-sm-3 card border-0 shadow">
+            <div class="col-10 col-sm-8 offset-1 offset-sm-2 card border-0 shadow">
                 <form action="" method="post" enctype="multipart/form-data" id="style_menu">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div style="height: 500px" class=" my-5 text-center">
+                        <div class=" my-2 text-center">
                             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                                <div class="carousel-inner fit-image">
+                                <div class="carousel-inner fit-image border-3 style="height: 500px">
                                     <div class="carousel-item active ">
                                         <img class="d-block w-100 img-fluid " src="{{path.0}}" alt="First slide">
                                     </div>
@@ -112,10 +133,9 @@
                                     <option value="sport">運動風</option>
                                 </select>
                             </div>
-
-                            <div class="col-8 btn-group " role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary btn-lg " id='topURL'>購買上衣</button>
-                                <button type="button" class="btn btn-primary btn-lg " id='botURL'>購買下著</button>
+                            <div class="btn-toolbar col-8 justify-content-end" role="toolbar">
+                                <button type="button" class="btn btn-primary mirrorBtn btn-lg mx-3" id='topURL'>購買上衣</button>
+                                <button type="button" class="btn btn-primary mirrorBtn btn-lg mx-3" id='botURL'>購買下著</button>
                             </div>
                         </div>
                     </div>

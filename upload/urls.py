@@ -6,5 +6,7 @@ urlpatterns = [
     # path('livefeed/',views.livefeed, name='livefeed'),
     path('login/',views.login, name='login'),
     path('recommend/',views.recommend, name='recommend'),
-    path('result/',views.result, name='result')
+    path('result/',views.result, name='result'),
+    path('predict/',views.predict, name='predict')
+
 ]

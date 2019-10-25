@@ -1,5 +1,3 @@
-
-  
   @import url(https://fonts.googleapis.com/css?family=Open+Sans:700);
   
   .mirrorBtn {
@@ -24,6 +22,25 @@
     left:4px;
     top:4px;
     box-shadow:0 0 0 0 white;
+  }
+  .cardShadow{
+    position:relative;
+    /* margin-top:10%; */
+    background:#416fec;
+    border:1px solid white;
+    padding:5px;
+    font-size:1em;
+    color:white;
+    box-shadow:4px 4px 0px 0px white;
+    font-family: 'Open Sans', sans-serif;
+    font-weight:700;
+    letter-spacing:5px;
+    text-transform:uppercase;
+    transition: all 300ms ease-in-out;
+    left:0;
+    top:0;
+    height: 300px;
+    border-radius: 15px;
   }
   
   

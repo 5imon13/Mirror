@@ -1,0 +1,12 @@
+.mic_icon {
+    background-image:url('../media/mic.gif');
+    width:55px;
+    height:55px;
+    border-radius: 50%;
+}
+.mic_icon_working {
+    background-image:url("../media/mic-animate.gif");
+    width:55px;
+    height:55px;
+    border-radius: 50%;
+}
