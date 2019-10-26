@@ -25,6 +25,7 @@ import face_recognition
 import pandas as pd
 import xgboost
 from upload.Size import predictSize
+from upload.models import yolo                                    
 
 @csrf_exempt
 def index(request):
@@ -93,7 +94,7 @@ def result(request):
         if image.mode == "P":
             image = image.convert('RGB')
         print("呼叫YOLO，開始辨識")
-        yolo = YOLO()
+        # yolo = YOLO()
         yolo.clear_session() 
         r_image, result = yolo.detect_image(image)
         print("辨識完成，輸出檔案")

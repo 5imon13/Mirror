@@ -1,4 +1,5 @@
 from django.db import models
+from upload.yolo import YOLO
 
 # class Profile(models.Model):
 #    name = models.CharField(max_length = 50)
@@ -6,6 +7,7 @@ from django.db import models
 
 #    class Meta:
 #       db_table = "profile"
+yolo = YOLO()
 class Product(models.Model):
     pid = models.AutoField(primary_key=True)
     style = models.CharField(max_length=30)

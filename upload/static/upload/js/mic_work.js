@@ -22,7 +22,7 @@ function startButton(event) {
     langCombo = "cmn-Hant-TW";
     console.log('start_r2');
     if (recognizing) {                      // if recognizing, stop it
-        startStopButton.className = startStopButton.className.replace(/\bmic_icon_working\b/g, "mic_icon");
+        
         recognition.stop();
     }
     else {                                  // start recognizing
@@ -52,7 +52,8 @@ else {
         console.log('start_record');
         // infoBox.innerText = "辨識中...";
     };
-    recognition.onend = function() {                 // 辨識完成
+    recognition.onend = function() {                // 辨識完成
+        startStopButton.className = startStopButton.className.replace(/\bmic_icon_working\b/g, "mic_icon");
         recognizing = false;
         console.log('end_record');
 
@@ -77,7 +78,7 @@ else {
                             window.location = '/upload/login/';
                             break;
                         case 1 : case 4 :
-                            window.location = '/upload/';
+                            window.location = '/upload/upload/';
                             break;
                         case 2 :
                             console.log(window.location.href)

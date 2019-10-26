@@ -36,6 +36,15 @@ def detec():
     Keith_image = face_recognition.load_image_file("upload/static/upload/pictures_of_people_i_know/Keith.jpg")
     Keith_face_encoding = face_recognition.face_encodings(Keith_image)[0]
 
+    YiNing_image = face_recognition.load_image_file("upload/static/upload/pictures_of_people_i_know/Yi_Ning.jpg")
+    YiNing_face_encoding = face_recognition.face_encodings(YiNing_image)[0]
+
+    Dealia_image = face_recognition.load_image_file("upload/static/upload/pictures_of_people_i_know/Dealia.jpg")
+    Dealia_face_encoding = face_recognition.face_encodings(Dealia_image)[0]
+
+    Sisiya_image = face_recognition.load_image_file("upload/static/upload/pictures_of_people_i_know/Sisiya.jpg")
+    Sisiya_face_encoding = face_recognition.face_encodings(Sisiya_image)[0]
+
     known_face_encodings = [
         obama_face_encoding,
         biden_face_encoding,
@@ -44,7 +53,10 @@ def detec():
         unknown_face_encoding,
         Garry_face_encoding,
         Wells_face_encoding,
-        Keith_face_encoding
+        Keith_face_encoding,
+        YiNing_face_encoding,
+        Dealia_face_encoding,
+        Sisiya_face_encoding
     ]
     known_face_names = [
         "Dylan",
@@ -54,7 +66,10 @@ def detec():
         "Jerry",
         "Garry",
         "Wells",
-        "Keith"
+        "Keith",
+        "Yi-Ning",
+        "Dealia",
+        "Sisiya"
     ]
 
     # Initialize some variables
