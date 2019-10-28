@@ -14,9 +14,9 @@ def get_size(x):
         return 'L'
     elif 15 < x <= 19:
         return 'XL'
-    elif 19 < x <= 22:
+    elif 19 < x <= 23:
         return '2XL'
-    elif 22 < x:
+    elif 23 < x:
         return '3XL'
     else:
         return 'none'
@@ -28,7 +28,7 @@ def predictSize(bustsize,weight,bodytype,height,age):
     test_df = pd.DataFrame.from_dict(test)
     pred = bst.predict(xgboost.DMatrix(test_df))
     size = get_size(pred[0])
-    print(size)  
+    print('size: '+size)  
     return size
 
 

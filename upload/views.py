@@ -18,6 +18,7 @@ import numpy as np
 import base64
 
 from upload.models import Product
+from upload.models import Member
 import upload.facerec_from_webcam_faster as face
 import upload.label_image as style_model
 from upload.yolo import YOLO
@@ -37,6 +38,14 @@ def index(request):
 def upload(request):
     if request.is_ajax():
         del request.session['uid']
+        
+        # request.session.flush
+        if 'age' or 'height' or 'weight' or 'bust_size' in request.session:
+            del request.session['age']
+            del request.session['height']
+            del request.session['weight']
+            del request.session['bust_size']
+        print(request.session)
         msg = 'Successfully log out!'
         return HttpResponse(json.dumps(msg))
 
@@ -154,10 +163,19 @@ def login(request):
         with open(path[1:], 'wb') as f:
             f.write(imgdata)
         name = face.detec()
-        if name=='Unknown':
+        try:
+            memberInfo = Member.objects.get(name=name)
+        except Member.DoesNotExist:
+            memberInfo = None
+        if memberInfo == None:
             return redirect("/upload/upload/")
         else:
-            request.session['uid'] = name
+            
+            request.session['uid'] = memberInfo.name
+            request.session['age'] = memberInfo.age
+            request.session['height'] = memberInfo.height
+            request.session['weight'] = memberInfo.weight
+            request.session['bust_size'] = memberInfo.bust_size
             return redirect("/upload/upload/")
 
 def recommend(request):
@@ -192,6 +210,7 @@ def recommend(request):
 def predict(request):
     if request.is_ajax():
         reqDict = request.POST.dict()
+        print(reqDict)
         age = reqDict['Age']
         height = reqDict['Height']
         weight = reqDict['Weight']

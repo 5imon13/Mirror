@@ -93,22 +93,27 @@
                         <div style="height: 300px" class=" my-5 text-center">
                             <div class="form-group row">
                                 <label for="inputName4" class="col-sm-2 col-form-label">姓名</label>
-                                <input type="name" class="form-control col-sm-2" id="inputName4" name="username">
+                                <input type="name" class="form-control col-sm-2" id="inputName4" name="username"
+                                    value="{{ request.session.uid|default:'' }}">
                                 <label for="inputAge" class="col-sm-2 offset-sm-2 col-form-label">年齡</label>
-                                <input type="text" class="form-control col-sm-2" id="inputAge" name="Age">
+                                <input type="text" class="form-control col-sm-2" id="inputAge" name="Age"
+                                    value="{{ request.session.age|default:'22' }}">
                             </div>
                             <div class="form-group row">
                                 <label for="inputheight" class="col-sm-2 col-form-label">身高</label>
-                                <input type="text" class="form-control col-sm-2" id="inputheight" name="Height"><span
+                                <input type="text" class="form-control col-sm-2" id="inputheight" name="Height"
+                                    value="{{ request.session.height|default:'170' }}"><span
                                     class="align-self-end"> 公分</span>
                                 <label for="inputweight" class="col-sm-2 offset-sm-2 col-form-label">體重</label>
-                                <input type="text" class="form-control col-sm-2" id="inputweight" name="Weight"><span
+                                <input type="text" class="form-control col-sm-2" id="inputweight" name="Weight"
+                                    value="{{ request.session.weight|default:'70' }}"><span
                                     class="align-self-end"> 公斤</span>
                             </div>
                             <div class="form-group row">
                                 <label for="inputBustSize" class="col-sm-2 col-form-label">胸圍</label>
-                                <input type="text" class="form-control col-sm-2" id="inputBustSize"
-                                    name="BustSize"><span class="align-self-end"> 公分</span>
+                                <input type="text" class="form-control col-sm-2" id="inputBustSize" name="BustSize"
+                                    value="{{ request.session.bust_size|default:'80' }}"><span
+                                    class="align-self-end"> 公分</span>
 
                                 <label for="inputBodyType" class="col-sm-2 offset-sm-2 col-form-label">體型</label>
                                 <select id="inputBodyType" class="form-control col-sm-2" name="BodyType">
@@ -134,8 +139,7 @@
                                 <div class="btn-toolbar offset-1 col-8 justify-content-start" role="toolbar">
                                     <button type="button" class="btn btn-primary  btn-lg mx-3"
                                         id='predictBtn'>預測</button>
-                                    <button type="reset" class="btn btn-danger  btn-lg  mx-3"
-                                        id='clearBtn'>取消</button>
+                                    <button type="reset" class="btn btn-danger  btn-lg  mx-3" id='clearBtn'>取消</button>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +152,7 @@
         $(function () {
             $('#predictBtn').click(function () {
                 var postData = $("#bodyInfo").serialize();
+                console.log(postData);
                 $.post('/upload/predict/', postData, function (result) {
                     $('#result').text(result);
                 }, 'json');

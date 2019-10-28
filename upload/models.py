@@ -18,3 +18,14 @@ class Product(models.Model):
     bot_url = models.URLField()
     def __str__(self):
         return str(self.pid)
+
+class Member(models.Model):
+    name = models.CharField(max_length=30)
+    password = models.CharField(max_length=300)
+    bust_size = models.IntegerField()
+    weight = models.IntegerField()
+    height = models.IntegerField()
+    body_type = models.IntegerField()
+    age = models.IntegerField()
+    def __str__(self):
+        return str(self.name)
