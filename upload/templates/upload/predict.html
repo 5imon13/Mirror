@@ -34,7 +34,7 @@
         .card {
             background-color: rgba(70, 70, 77, 0.80);
             color: #fff;
-            font-weight: bolder;
+            /* font-weight: bolder; */
             border-radius: 15px;
         }
 
@@ -94,7 +94,8 @@
                             <div class="form-group row">
                                 <label for="inputName4" class="col-sm-2 col-form-label">姓名</label>
                                 <input type="name" class="form-control col-sm-2" id="inputName4" name="username"
-                                    value="{{ request.session.uid|default:'' }}">
+                                    value="{{ request.session.uid|default:'' }}"><span
+                                    class="align-self-end"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                 <label for="inputAge" class="col-sm-2 offset-sm-2 col-form-label">年齡</label>
                                 <input type="text" class="form-control col-sm-2" id="inputAge" name="Age"
                                     value="{{ request.session.age|default:'22' }}">

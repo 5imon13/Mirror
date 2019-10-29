@@ -112,14 +112,27 @@ def result(request):
         r_image = r_image.convert('RGB')
         r_image.save(path[1:])
         print(result)
+        # top_box = []
+        # bot_box = []
+        # full_btn = []
         if len(result) > 0:
             for item in result:
                 if item['type'] == 'top':
+                    # top_box = item['box']
+                    # print(top_box)
                     top = item
                 elif item['type'] == 'bot':
+                    # bot_box = item['box']
+                    # print(bot_box)
                     bot = item
                 else:
+                    # full_box = item['box']
+                    # print(full_box)
                     full = item
+        #     if len(full_box) > 0:
+        #         yolo_bbox = [int(full_box[0]), int(full_box[1]), int(full_box[2]), int(full_box[3])]
+        #     else:
+        #         yolo_bbox = [int(min(top_box[0],bot_box[0])), int(min(top_box[1],bot_box[1])), int(max(top_box[2],bot_box[2])), int(max(top_box[3],bot_box[3]))]
             # top = result[1]
             # bot = result[0]
             print('GooleNet 開始分類風格')

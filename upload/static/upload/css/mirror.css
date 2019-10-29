@@ -46,7 +46,7 @@
 
   @font-face {
     font-family: HanSans;
-    src: url(/upload/static/upload/font/SourceHanSansTW-Bold.otf);
+    src: url(/static/upload/font/SourceHanSansTW-Bold.otf);
   }
   html {
     font-family: 'Microsoft JhengHei', sans-serif;
